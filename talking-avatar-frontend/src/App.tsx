@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 import { io } from 'socket.io-client';
+import { useTranslation } from 'react-i18next';
+import './i18n';
+import LanguageSelector from './components/LanguageSelector';
 
 function App() {
+  const { t } = useTranslation();
   const [token, setToken] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [activeTab, setActiveTab] = useState('image');
@@ -28,7 +32,7 @@ function App() {
   const [isLoadingVoices, setIsLoadingVoices] = useState(false); // Loader state for voices
   const [showVoicePopup, setShowVoicePopup] = useState(false); // State to control voice popup
   const [playScriptError, setPlayScriptError] = useState<string | null>(null); // State for error message
-  const [audioUrl, setAudioUrl] = useState<string | null>(null); // New state for audio URL
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioData, setAudioData] = useState<string | null>(null);
   const [showPreviewPopup, setShowPreviewPopup] = useState(false); // New state for preview popup
   const [selectedAvatarUrl, setSelectedAvatarUrl] = useState<string | null>(null); // New state for selected avatar URL
@@ -390,9 +394,12 @@ function App() {
 
   return (
     <div className="app-container">
+      <div className="language-selector-container">
+        <LanguageSelector />
+      </div>
       {isLoadingAvatars && (
         <div className="loader-overlay">
-          <div className="loader"></div> {/* Loader component */}
+          <div className="loader"></div>
         </div>
       )}
       {isLoadingVoices && (
@@ -404,10 +411,8 @@ function App() {
       {showVoicePopup && (
         <div className="result-popup-overlay">
           <div className="result-popup">
-            <h2>Select a Voice</h2>
-
-            {/* Male Voices Section */}
-            <h3>Male Voices</h3>
+            <h2>{t('selectVoice')}</h2>
+            <h3>{t('maleVoices')}</h3>
             <div className="voice-list">
               {voices.filter(voice => voice.gender.toLowerCase() === 'male').map(voice => (
                 <div 
@@ -415,16 +420,14 @@ function App() {
                   className={`voice-item ${selectedVoiceId === voice.voice_id ? 'selected' : ''}`} 
                   onClick={() => handleSelectVoice(voice.voice_id)}
                 >
-                  <p><strong>Name:</strong> {voice.name}</p>
-                  <p><strong>Gender:</strong> {voice.gender}</p>
-                  <p><strong>Accent:</strong> {voice.accent}</p>
-                  <p><strong>Description:</strong> {voice.description}</p>
+                  <p><strong>{t('name')}:</strong> {voice.name}</p>
+                  <p><strong>{t('gender')}:</strong> {voice.gender}</p>
+                  <p><strong>{t('accent')}:</strong> {voice.accent}</p>
+                  <p><strong>{t('description')}:</strong> {voice.description}</p>
                 </div>
               ))}
             </div>
-
-            {/* Female Voices Section */}
-            <h3>Female Voices</h3>
+            <h3>{t('femaleVoices')}</h3>
             <div className="voice-list">
               {voices.filter(voice => voice.gender.toLowerCase() === 'female').map(voice => (
                 <div 
@@ -432,17 +435,16 @@ function App() {
                   className={`voice-item ${selectedVoiceId === voice.voice_id ? 'selected' : ''}`} 
                   onClick={() => handleSelectVoice(voice.voice_id)}
                 >
-                  <p><strong>Name:</strong> {voice.name}</p>
-                  <p><strong>Gender:</strong> {voice.gender}</p>
-                  <p><strong>Accent:</strong> {voice.accent}</p>
-                  <p><strong>Description:</strong> {voice.description}</p>
+                  <p><strong>{t('name')}:</strong> {voice.name}</p>
+                  <p><strong>{t('gender')}:</strong> {voice.gender}</p>
+                  <p><strong>{t('accent')}:</strong> {voice.accent}</p>
+                  <p><strong>{t('description')}:</strong> {voice.description}</p>
                 </div>
               ))}
             </div>
-
             <div className="popup-buttons">
-              <button className="ok-button" onClick={() => setShowVoicePopup(false)}>OK</button>
-              <button className="cancel-button" onClick={() => setShowVoicePopup(false)}>Cancel</button>
+              <button className="ok-button" onClick={() => setShowVoicePopup(false)}>{t('ok')}</button>
+              <button className="cancel-button" onClick={() => setShowVoicePopup(false)}>{t('cancel')}</button>
             </div>
           </div>
         </div>
@@ -452,7 +454,7 @@ function App() {
           <div className={`welcome-content ${isSubmitted ? 'fade-out' : 'fade-in'}`}>
             <div className="title-container">
               <img src="/images/4p6vr8j7vbom4axo7k0 2.png" alt="Face Swap AI Logo" className="logo" />
-              <h1 className="title">Talking Avatar</h1>
+              <h1 className="title">{t('welcome')}</h1>
             </div>
             
             <div className="auth-method-toggle">
@@ -460,13 +462,13 @@ function App() {
                 className={`auth-toggle-btn ${authMethod === 'token' ? 'active' : ''}`}
                 onClick={() => setAuthMethod('token')}
               >
-                Use Bearer Token
+                {t('useBearerToken')}
               </button>
               <button 
                 className={`auth-toggle-btn ${authMethod === 'credentials' ? 'active' : ''}`}
                 onClick={() => setAuthMethod('credentials')}
               >
-                Use Client Credentials
+                {t('useClientCredentials')}
               </button>
             </div>
 
@@ -476,7 +478,7 @@ function App() {
                   type="text"
                   value={token}
                   onChange={(e) => setToken(e.target.value)}
-                  placeholder="Enter your API token"
+                  placeholder={t('enterApiToken')}
                   className="token-input"
                   required
                 />
@@ -486,7 +488,7 @@ function App() {
                     type="text"
                     value={clientId}
                     onChange={(e) => setClientId(e.target.value)}
-                    placeholder="Enter your Client ID"
+                    placeholder={t('enterClientId')}
                     className="token-input"
                     required
                   />
@@ -494,14 +496,14 @@ function App() {
                     type="password"
                     value={clientSecret}
                     onChange={(e) => setClientSecret(e.target.value)}
-                    placeholder="Enter your Client Secret"
+                    placeholder={t('enterClientSecret')}
                     className="token-input"
                     required
                   />
                 </>
               )}
               <button type="submit" className="submit-button">
-                Get Started
+                {t('getStarted')}
               </button>
             </form>
           </div>
@@ -510,16 +512,16 @@ function App() {
         <div className="main-container">
           <div className="main-header">
             <img src="/images/4p6vr8j7vbom4axo7k0 2.png" alt="Talking Avatar AI Logo" className="logo" />
-            <h1 className="title">Talking Avatar</h1>
+            <h1 className="title">{t('talkingAvatar')}</h1>
           </div>
           <div className="avatar-selection" style={{ display: 'flex', alignItems: 'center' }}>
-            <h2 style={{ marginRight: '1rem' }}>Choose Avatar</h2>
+            <h2 style={{ marginRight: '1rem' }}>{t('chooseAvatar')}</h2>
             <button 
               className="preview-button" 
               onClick={handlePreview} 
-              disabled={!selectedAvatar} // Disable if no avatar is selected
+              disabled={!selectedAvatar}
             >
-              Preview
+              {t('preview')}
             </button>
           </div>
           <div className="avatar-grid" style={{ display: 'flex', overflowX: 'auto' }}>
@@ -536,55 +538,52 @@ function App() {
             ))}
           </div>
 
-          {/* Add margin to the container for the tabs */}
           <div className="tabs-container" style={{ marginTop: '2rem' }}>
-            {/* New Tab Section */}
             <div className="tabs">
               <button 
                 className={`tab ${activeContentTab === 'script' ? 'active' : ''}`} 
                 onClick={() => {
                   setActiveContentTab('script');
-                  setAudioUrl(null); // Reset audioUrl when switching to Script tab
+                  setAudioUrl(null);
                 }}
               >
-                Script
+                {t('script')}
               </button>
               <button 
                 className={`tab ${activeContentTab === 'upload' ? 'active' : ''}`} 
                 onClick={() => {
                   setActiveContentTab('upload');
-                  setAudioUrl(null); // Reset audioUrl when switching to Upload tab
+                  setAudioUrl(null);
                 }}
               >
-                Upload Audio
+                {t('uploadAudio')}
               </button>
             </div>
 
-            {/* Content based on active tab */}
             {activeContentTab === 'script' ? (
               <div className="script-input">
-                <h2>Script</h2>
+                <h2>{t('script')}</h2>
                 <textarea
                   value={script}
                   onChange={(e) => setScript(e.target.value)}
-                  placeholder="Enter your script here..."
+                  placeholder={t('enterScript')}
                   className="script-textarea"
-                  maxLength={1000} // Limit to 1000 characters
+                  maxLength={1000}
                 />
                 <div className="script-buttons">
-                  <button className="select-voice-button" onClick={fetchVoices}>Select Voice</button>
+                  <button className="select-voice-button" onClick={fetchVoices}>{t('selectVoice')}</button>
                   <button 
                     className="play-script-button" 
                     onClick={handlePlayScript}
-                    disabled={!selectedVoiceId || !script.trim()} // Disable button if conditions are not met
+                    disabled={!selectedVoiceId || !script.trim()}
                   >
-                    Play Script
+                    {t('playScript')}
                   </button>
                   {audioUrl && (
                     <div className="audio-player">
                       <audio controls>
                         <source src={audioUrl} type="audio/mpeg" />
-                        Your browser does not support the audio element.
+                        {t('browserNoAudioSupport')}
                       </audio>
                     </div>
                   )}
@@ -592,16 +591,16 @@ function App() {
               </div>
             ) : (
               <div className="upload-audio-input">
-                <h2>Upload Audio</h2>
+                <h2>{t('uploadAudio')}</h2>
                 <div className="audio-input-container">
                   <input
                     type="url"
                     value={audioInputUrl}
                     onChange={(e) => {
                       setAudioInputUrl(e.target.value);
-                      if (audioInputError) setAudioInputError(''); // Clear error when input changes
+                      if (audioInputError) setAudioInputError('');
                     }}
-                    placeholder="Enter audio URL (mp3, wav, m4a, aac, ogg)"
+                    placeholder={t('enterAudioUrl')}
                     className={`url-input ${audioInputError ? 'error' : ''}`}
                   />
                   <button 
@@ -609,7 +608,7 @@ function App() {
                     onClick={handleAudioUrlSubmit}
                     disabled={!audioInputUrl.trim()}
                   >
-                    Set Audio
+                    {t('setAudio')}
                   </button>
                 </div>
                 {audioInputError && (
@@ -621,7 +620,7 @@ function App() {
                   <div className="audio-preview">
                     <audio controls>
                       <source src={audioUrl} type="audio/mpeg" />
-                      Your browser does not support the audio element.
+                      {t('browserNoAudioSupport')}
                     </audio>
                   </div>
                 )}
@@ -635,10 +634,10 @@ function App() {
               {isLoading ? (
                 <div className="button-content">
                   <div className="generate-loader"></div>
-                  <span>Generating...</span>
+                  <span>{t('generating')}</span>
                 </div>
               ) : (
-                'Generate Output'
+                t('generateOutput')
               )}
             </button>
           </div>
@@ -653,9 +652,9 @@ function App() {
       {showPreviewPopup && (
         <div className="result-popup-overlay">
           <div className="result-popup">
-            <h2>Avatar Preview</h2>
+            <h2>{t('avatarPreview')}</h2>
             {selectedAvatarUrl && <img src={selectedAvatarUrl} alt="Avatar Preview" style={{ maxWidth: '100%', borderRadius: '0.5rem' }} />} {/* Display the image */}
-            <button onClick={() => setShowPreviewPopup(false)}>✖ Close</button>
+            <button onClick={() => setShowPreviewPopup(false)}>{t('close')}</button>
           </div>
         </div>
       )}
@@ -664,7 +663,7 @@ function App() {
       {showTalkingAvatarPopup && talkingAvatarResult && (
         <div className="result-popup-overlay">
           <div className="result-popup video-result-popup">
-            <h2>Talking Avatar Result</h2>
+            <h2>{t('talkingAvatarResult')}</h2>
             <div className="result-video-container">
               <video 
                 className="result-video" 
@@ -679,13 +678,13 @@ function App() {
                 className="download-button"
                 onClick={handleTalkingAvatarDownload}
               >
-                Download
+                {t('download')}
               </button>
               <button 
                 className="close-popup-button"
                 onClick={() => setShowTalkingAvatarPopup(false)}
               >
-                Close
+                {t('close')}
               </button>
             </div>
           </div>
@@ -696,7 +695,7 @@ function App() {
         <div className="processing-overlay">
           <div className="processing-content">
             <div className="processing-loader"></div>
-            <p className="processing-text">Creating your talking avatar...</p>
+            <p className="processing-text">{t('creatingTalkingAvatar')}</p>
           </div>
         </div>
       )}
