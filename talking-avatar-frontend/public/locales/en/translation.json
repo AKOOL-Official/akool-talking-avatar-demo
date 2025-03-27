@@ -31,5 +31,16 @@
     "description": "Description",
     "browserNoAudioSupport": "Your browser does not support the audio element",
     "generating": "Generating...",
-    "creatingTalkingAvatar": "Creating Talking Avatar..."
+    "creatingTalkingAvatar": "Creating Talking Avatar...",
+    "createYourOwnAvatar": "Create Your Avatar",
+    "referenceVideoUrl": "Reference Video URL",
+    "enterReferenceVideoUrl": "Enter Reference Video URL",
+    "avatarId": "Avatar ID",
+    "enterAvatarId": "Enter Avatar ID",
+    "avatarIdHint": "What the avatar id should be set to.",
+    "createAvatar": "Create Avatar",
+    "processingAvatar": "Processing Avatar",
+    "avatarProcessingMessage": "Your avatar is being processed and will be available soon!",
+    "avatarCreationInitiated": "Avatar Creation Started!",
+    "avatarQualityInfo": "The avatars created by users on our website are of good quality, but they are not the best we offer. For a higher-quality, well-trained custom avatar, please reach out to us."
 } 

@@ -1187,3 +1187,655 @@ body {
   background: var(--background);
   color: var(--text);
 }
+
+/* Create Avatar Button Styles */
+.create-avatar-button {
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: linear-gradient(45deg, #FF3CAC, #784BA0, #2B86C5);
+  background-size: 200% 200%;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 1rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(255, 60, 172, 0.3);
+  animation: gradientShift 3s ease infinite;
+}
+
+.create-avatar-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(30deg);
+  transition: all 0.5s ease;
+  opacity: 0;
+}
+
+.create-avatar-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(255, 60, 172, 0.5);
+}
+
+.create-avatar-button:hover::before {
+  opacity: 1;
+  animation: shine 1.5s ease;
+}
+
+@keyframes shine {
+  0% {
+    left: -50%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    left: 120%;
+    opacity: 0;
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Create Avatar Popup Styles */
+.create-avatar-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.create-avatar-popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.create-avatar-popup {
+  background: linear-gradient(135deg, rgba(40, 40, 60, 0.9), rgba(20, 20, 30, 0.95));
+  border-radius: 1rem;
+  padding: 2.5rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  position: relative;
+  transform: translateY(30px) scale(0.95);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.create-avatar-popup-overlay.active .create-avatar-popup {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.create-avatar-popup h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(45deg, #FF3CAC, #784BA0, #2B86C5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+
+.create-avatar-popup .close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.create-avatar-popup .close-button:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(90deg);
+}
+
+.create-avatar-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.create-avatar-form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.create-avatar-form-group input {
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.create-avatar-form-group input:focus {
+  outline: none;
+  border-color: #FF3CAC;
+  box-shadow: 0 0 0 2px rgba(255, 60, 172, 0.2);
+}
+
+.create-avatar-form-group .hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+.create-avatar-submit {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: linear-gradient(45deg, #FF3CAC, #784BA0, #2B86C5);
+  background-size: 200% 200%;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  animation: gradientShift 3s ease infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.create-avatar-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 60, 172, 0.4);
+}
+
+.create-avatar-submit:active {
+  transform: translateY(1px);
+}
+
+.create-avatar-submit::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(30deg);
+  transition: all 0.5s ease;
+  opacity: 0;
+}
+
+.create-avatar-submit:hover::after {
+  opacity: 1;
+  animation: shine 1.5s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .create-avatar-popup {
+    width: 95%;
+    padding: 1.5rem;
+  }
+}
+
+/* Enhanced Success Message Styles */
+.success-message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  animation: fadeInUp 0.5s ease-out forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(45deg, #00C853, #64DD17);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 40px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 10px 20px rgba(0, 200, 83, 0.3);
+  animation: successPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  position: relative;
+  z-index: 2;
+}
+
+.success-message-container h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #64DD17;
+  position: relative;
+  z-index: 2;
+  animation: fadeInUp 0.5s ease-out 0.2s both;
+}
+
+.success-message-container p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 2;
+  animation: fadeInUp 0.5s ease-out 0.4s both;
+}
+
+.celebration-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.celebration-animation::before,
+.celebration-animation::after {
+  content: '';
+  position: absolute;
+  top: -10%;
+  width: 100%;
+  height: 0;
+  animation: confetti 3s ease-out forwards;
+}
+
+.celebration-animation::before {
+  left: -5%;
+  background: radial-gradient(circle, transparent 30%, #FF3CAC 30%, #FF3CAC 40%, transparent 40%, transparent 70%, #784BA0 70%, #784BA0 80%, transparent 80%);
+  background-size: 20px 20px;
+  background-position: 0 0;
+}
+
+.celebration-animation::after {
+  left: 5%;
+  background: radial-gradient(circle, transparent 30%, #2B86C5 30%, #2B86C5 40%, transparent 40%, transparent 70%, #64DD17 70%, #64DD17 80%, transparent 80%);
+  background-size: 20px 20px;
+  background-position: 0 0;
+  animation-delay: 0.2s;
+}
+
+/* Add sparkles around the success icon */
+.success-icon::before,
+.success-icon::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 10%, transparent 10%);
+  background-size: 20px 20px;
+  animation: sparkle 2s linear infinite;
+  opacity: 0.7;
+}
+
+.success-icon::after {
+  animation-delay: 1s;
+  animation-duration: 3s;
+}
+
+@keyframes sparkle {
+  0% {
+    transform: scale(0.8) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.5) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes successPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+  }
+  80% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes confetti {
+  0% {
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    height: 100%;
+    opacity: 0;
+  }
+}
+
+/* Add floating particles */
+.success-message-container::before,
+.success-message-container::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #FF3CAC, #784BA0);
+  top: 50%;
+  animation: float 4s ease-in-out infinite;
+}
+
+.success-message-container::before {
+  left: 20%;
+  animation-delay: 0.5s;
+}
+
+.success-message-container::after {
+  right: 20%;
+  animation-delay: 1.5s;
+  background: linear-gradient(45deg, #2B86C5, #64DD17);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.2);
+    opacity: 0.3;
+  }
+}
+
+/* Processing Avatar Styles with icons instead of images */
+.avatar-item.processing {
+  position: relative;
+  border: 2px dashed #FF3CAC;
+  background: rgba(40, 40, 60, 0.8);
+  animation: processingPulse 2s infinite alternate;
+  opacity: 0.9;
+}
+
+.processing-avatar-placeholder {
+  width: 100%;
+  height: 150px; /* Adjust to match your avatar image height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-radius: 8px 8px 0 0;
+}
+
+.processing-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.processing-icon:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(45deg, #FF3CAC, #784BA0, #2B86C5);
+  border-radius: 50%;
+  animation: iconPulse 1.5s infinite alternate;
+}
+
+.processing-icon:after {
+  content: '⚙️';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  animation: spin 3s linear infinite;
+}
+
+.processing-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 0.5rem;
+  z-index: 5;
+}
+
+.processing-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #FF3CAC;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+.processing-text {
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+  padding: 0 5px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes processingPulse {
+  0% {
+    box-shadow: 0 0 5px rgba(255, 60, 172, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 60, 172, 0.8);
+  }
+}
+
+@keyframes iconPulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Popup Header Styles */
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.popup-header h2 {
+  margin: 0;
+}
+
+/* Keep existing close button styles but adjust positioning */
+.close-popup-button {
+  margin-left: 1rem;
+  /* Add any other existing styles here */
+}
+
+/* Avatar Quality Info Box Styles */
+.avatar-quality-info {
+  background: rgba(40, 40, 60, 0.9);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  border-left: 4px solid #FF3CAC;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.info-icon {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  color: #FF3CAC;
+  animation: iconPulse 2s infinite alternate;
+}
+
+.info-content {
+  flex: 1;
+}
+
+.info-content p {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Animations */
+@keyframes iconPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .avatar-quality-info {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .info-icon {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.success-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.success-popup {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.success-icon {
+  color: #4CAF50;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

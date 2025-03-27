@@ -31,5 +31,16 @@
     "description": "描述",
     "browserNoAudioSupport": "您的浏览器不支持音频元素",
     "generating": "生成中...",
-    "creatingTalkingAvatar": "正在创建会说话的虚拟形象..."
+    "creatingTalkingAvatar": "正在创建会说话的虚拟形象...",
+    "createYourOwnAvatar": "创建你的头像",
+    "referenceVideoUrl": "参考视频网址",
+    "enterReferenceVideoUrl": "输入参考视频网址",
+    "avatarId": "头像ID",
+    "enterAvatarId": "输入头像ID",
+    "avatarIdHint": "头像 ID 应设置为何值",
+    "createAvatar": "创建头像",
+    "processingAvatar": "处理头像",
+    "avatarProcessingMessage": "您的头像正在处理中，即将可用！",
+    "avatarCreationInitiated": "头像创建已开始！",
+    "avatarQualityInfo": "我们网站上的用户创建的头像质量不错，但并不是我们提供的最佳头像。如需更高质量、训练有素的自定义头像，请联系我们。"
 } 

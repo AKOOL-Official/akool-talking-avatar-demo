@@ -31,5 +31,16 @@
     "description": "説明",
     "browserNoAudioSupport": "お使いのブラウザはオーディオをサポートしていません",
     "generating": "生成中...",
-    "creatingTalkingAvatar": "トーキングアバターを作成中"
+    "creatingTalkingAvatar": "トーキングアバターを作成中",
+    "createYourOwnAvatar": "アバターを作成する",
+    "referenceVideoUrl": "参考動画URL",
+    "enterReferenceVideoUrl": "参照ビデオの URL を入力してください",
+    "avatarId": "アバターID",
+    "enterAvatarId": "アバターIDを入力",
+    "avatarIdHint": "アバターIDを設定するもの",
+    "createAvatar": "アバターの作成",
+    "processingAvatar": "アバターの処理",
+    "avatarProcessingMessage": "あなたのアバターは現在処理中で、まもなく利用可能になります。",
+    "avatarCreationInitiated": "アバター作成開始！",
+    "avatarQualityInfo": "当社のウェブサイトでユーザーが作成したアバターは高品質ですが、当社が提供する最高のものではありません。より高品質でよく訓練されたカスタム アバターをご希望の場合は、当社までご連絡ください。"
 } 

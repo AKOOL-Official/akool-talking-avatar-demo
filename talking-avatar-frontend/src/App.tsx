@@ -40,6 +40,13 @@ function App() {
   const [showTalkingAvatarPopup, setShowTalkingAvatarPopup] = useState(false);
   const [audioInputUrl, setAudioInputUrl] = useState<string>('');
   const [audioInputError, setAudioInputError] = useState<string>('');
+  const [showCreateAvatarPopup, setShowCreateAvatarPopup] = useState(false);
+  const [referenceVideoUrl, setReferenceVideoUrl] = useState('');
+  const [avatarId, setAvatarId] = useState('');
+  const [isCreatingAvatar, setIsCreatingAvatar] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [processingAvatars, setProcessingAvatars] = useState<any[]>([]);
+  const [pollingIds, setPollingIds] = useState<string[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,62 +78,32 @@ function App() {
     }
   };
 
-  const fetchAvatarList = async (token, page = 1) => {
-    setIsLoadingAvatars(true); // Start loading avatars
+  const fetchAvatarList = async (token) => {
+    setIsLoadingAvatars(true);
     try {
-      const response = await axios.get(`https://openapi.akool.com/api/open/v3/avatar/list?from=2&page=${page}&size=100`, {
+      // Modified to explicitly request a large number of avatars
+      const response = await axios.get(`https://openapi.akool.com/api/open/v3/avatar/list?page=1&size=1000`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
-      // Log the response to check its structure
       console.log('Avatar List Response:', response.data);
 
-      // Ensure the data is an array before setting it
       if (Array.isArray(response.data.data.result)) {
-        setAvatars(response.data.data.result);
+        const combinedAvatars = [...processingAvatars, ...response.data.data.result];
+        setAvatars(combinedAvatars);
       } else {
         console.error('Expected an array but got:', response.data.data.result);
-        setAvatars([]); // Set to empty array if not an array
-      }
-
-      // Check if more avatars are available
-      if (response.data.data.result.length < avatarsPerPage) {
-        setHasMoreAvatars(false); // No more avatars to load
+        setAvatars(processingAvatars);
       }
     } catch (error) {
       console.error('Error fetching avatar list:', error);
-      setAvatars([]); // Set to empty array on error
+      setAvatars(processingAvatars);
     } finally {
-      setIsLoadingAvatars(false); // Stop loading avatars
+      setIsLoadingAvatars(false);
     }
   };
-
-  const loadMoreAvatars = () => {
-    if (hasMoreAvatars) {
-      const nextPage = currentPage + 1;
-      fetchAvatarList(token, nextPage);
-      setCurrentPage(nextPage);
-    }
-  };
-
-  useEffect(() => {
-    const avatarGrid = document.querySelector('.avatar-grid');
-    const handleScroll = () => {
-      if (avatarGrid) {
-        const { scrollTop, scrollHeight, clientHeight } = avatarGrid;
-        if (scrollHeight - scrollTop <= clientHeight + 10) {
-          loadMoreAvatars();
-        }
-      }
-    };
-
-    avatarGrid?.addEventListener('scroll', handleScroll);
-    return () => {
-      avatarGrid?.removeEventListener('scroll', handleScroll);
-    };
-  }, [hasMoreAvatars, currentPage]);
 
   useEffect(() => {
     // Initialize socket connection when component mounts
@@ -236,7 +213,7 @@ function App() {
       input_text: script, // Use the script text area value
       voice_id: selectedVoiceId, // Use the selected voice ID
       rate: "100%",
-      webhookUrl: "https://7ed7-219-91-134-123.ngrok-free.app/api/webhook"
+      webhookUrl: "https://0f75-219-91-134-123.ngrok-free.app/api/webhook"
     };
 
     try {
@@ -282,13 +259,13 @@ function App() {
     
     setIsLoading(true); // Start loading state
     console.log("This is the audio url :: ", audioUrl);
-    console.log("This is the avatar url ::", selectedAvatar.url);
+    console.log("This is the avatar url ::", selectedAvatar);
     console.log("This is the audio data", audioData);
     
     const apiData = {
       width: 3840,
       height: 2160,
-      avatar_from: 2,
+      avatar_from: selectedAvatar.from,
       elements: [
         {
           type: "image",
@@ -326,7 +303,7 @@ function App() {
           url: audioUrl // Always include the audio URL
         }
       ],
-      webhookUrl: "https://7ed7-219-91-134-123.ngrok-free.app/api/webhook"
+      webhookUrl: "https://0f75-219-91-134-123.ngrok-free.app/api/webhook"
     };
 
     try {
@@ -389,6 +366,103 @@ function App() {
   const handleAudioUrlSubmit = () => {
     if (validateAudioUrl(audioInputUrl)) {
       setAudioUrl(audioInputUrl);
+    }
+  };
+
+  const handleCreateAvatarSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!referenceVideoUrl || !avatarId) {
+      alert(t('pleaseCompleteAllFields'));
+      return;
+    }
+    
+    setIsCreatingAvatar(true);
+    
+    try {
+      const response = await axios.post('https://openapi.akool.com/api/open/v3/avatar/create', {
+        url: referenceVideoUrl,
+        avatar_id: avatarId,
+        type: 1
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log("Create Avatar Response:", response.data);
+      
+      // Add the processing avatar to the list
+      const newProcessingAvatar = {
+        avatar_id: response.data.data._id,
+        name: t('processingAvatar'),
+        isProcessing: true
+      };
+      
+      // Update the processing avatars list
+      setProcessingAvatars(prev => [newProcessingAvatar, ...prev]);
+      
+      // Update the avatars list
+      setAvatars(prev => [newProcessingAvatar, ...prev]);
+      
+      // Start polling for this avatar
+      startPollingAvatarStatus(response.data.data._id);
+      
+      // Show success message and handle popup closure
+      setShowSuccessMessage(true);
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+        setShowCreateAvatarPopup(false);
+        setReferenceVideoUrl('');
+        setAvatarId('');
+      }, 3000);
+      
+    } catch (error) {
+      console.error('Error creating avatar:', error);
+      alert(t('errorCreatingAvatar'));
+    } finally {
+      setIsCreatingAvatar(false);
+    }
+  };
+
+  const startPollingAvatarStatus = (avatarId: string) => {
+    // Add this ID to the polling list
+    setPollingIds(prev => [...prev, avatarId]);
+    
+    // Start the polling process
+    pollAvatarStatus(avatarId);
+  };
+  
+  const pollAvatarStatus = async (avatarId: string) => {
+    try {
+      const response = await axios.get(`https://openapi.akool.com/api/open/v3/avatar/detail?id=${avatarId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      console.log(`Polling response for avatar ${avatarId}:`, response.data);
+      
+      if (response.data.data && response.data.data.status === 3) {
+        // Avatar is ready, remove from polling and processing lists
+        setPollingIds(prev => prev.filter(id => id !== avatarId));
+        setProcessingAvatars(prev => prev.filter(avatar => avatar.avatar_id !== avatarId));
+        
+        // Refresh the avatar list
+        fetchAvatarList(token);
+      } else {
+        // Continue polling if still in the polling list
+        if (pollingIds.includes(avatarId)) {
+          setTimeout(() => pollAvatarStatus(avatarId), 5000); // Poll every 5 seconds
+        }
+      }
+    } catch (error) {
+      console.error(`Error polling avatar status for ${avatarId}:`, error);
+      // Continue polling despite errors
+      if (pollingIds.includes(avatarId)) {
+        setTimeout(() => pollAvatarStatus(avatarId), 10000); // Longer interval on error
+      }
     }
   };
 
@@ -523,17 +597,38 @@ function App() {
             >
               {t('preview')}
             </button>
+            <button 
+              className="create-avatar-button" 
+              onClick={() => setShowCreateAvatarPopup(true)}
+            >
+              {t('createYourOwnAvatar')}
+            </button>
           </div>
           <div className="avatar-grid" style={{ display: 'flex', overflowX: 'auto' }}>
             {avatars.map((avatar) => (
               <div 
-                className={`avatar-item ${selectedAvatar?.avatar_id === avatar.avatar_id ? 'selected' : ''}`} 
-                key={avatar.avatar_id} 
-                onClick={() => setSelectedAvatar(avatar)}
-                style={{ cursor: 'pointer', margin: '0 10px' }}
+                className={`avatar-item ${selectedAvatar?.avatar_id === avatar.avatar_id ? 'selected' : ''} ${avatar.isProcessing ? 'processing' : ''}`} 
+                key={avatar.avatar_id || Math.random().toString()}
+                onClick={() => !avatar.isProcessing && setSelectedAvatar(avatar)}
               >
-                <img src={avatar.thumbnailUrl} alt={avatar.name} className="avatar-image" />
+                {avatar.isProcessing ? (
+                  <div className="processing-avatar-placeholder">
+                    <div className="processing-icon"></div>
+                  </div>
+                ) : (
+                  <img 
+                    src={avatar.thumbnailUrl || avatar.url} 
+                    alt={avatar.name} 
+                    className="avatar-image" 
+                  />
+                )}
                 <p>{avatar.name}</p>
+                {avatar.isProcessing && (
+                  <div className="processing-indicator">
+                    <div className="processing-spinner"></div>
+                    <p className="processing-text">{t('processingAvatar')}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -699,6 +794,78 @@ function App() {
           </div>
         </div>
       )}
+      {/* Create Avatar Popup */}
+      <div className={`create-avatar-popup-overlay ${showCreateAvatarPopup ? 'active' : ''}`}>
+        <div className="create-avatar-popup">
+          {showSuccessMessage ? (
+            <div className="success-message-container">
+              <div className="success-icon">✓</div>
+              <h3>{t('avatarCreationInitiated')}</h3>
+              <p>{t('avatarProcessingMessage')}</p>
+              <div className="celebration-animation"></div>
+            </div>
+          ) : (
+            <>
+              <div className="popup-header">
+                <h2>{t('createYourOwnAvatar')}</h2>
+                <button 
+                  className="close-popup-button" 
+                  onClick={() => setShowCreateAvatarPopup(false)}
+                >
+                  &times;
+                </button>
+              </div>
+              
+              <div className="avatar-quality-info">
+                <div className="info-icon">ℹ️</div>
+                <div className="info-content">
+                  <p>{t('avatarQualityInfo')}</p>
+                </div>
+              </div>
+
+              <form onSubmit={handleCreateAvatarSubmit}>
+                <div className="create-avatar-form-group">
+                  <label htmlFor="reference-video">{t('referenceVideoUrl')}</label>
+                  <input
+                    id="reference-video"
+                    type="url"
+                    value={referenceVideoUrl}
+                    onChange={(e) => setReferenceVideoUrl(e.target.value)}
+                    placeholder={t('enterReferenceVideoUrl')}
+                    required
+                  />
+                </div>
+                <div className="create-avatar-form-group">
+                  <label htmlFor="avatar-id">{t('avatarId')}</label>
+                  <input
+                    id="avatar-id"
+                    type="text"
+                    value={avatarId}
+                    onChange={(e) => setAvatarId(e.target.value)}
+                    placeholder={t('enterAvatarId')}
+                    required
+                  />
+                  <div className="hint">{t('avatarIdHint')}</div>
+                </div>
+                <button 
+                  type="submit" 
+                  className="create-avatar-submit"
+                  disabled={isCreatingAvatar}
+                >
+                  {isCreatingAvatar ? (
+                    <div className="button-content">
+                      <div className="generate-loader"></div>
+                      <span>{t('creating')}</span>
+                    </div>
+                  ) : (
+                    t('createAvatar')
+                  )}
+                </button>
+              </form>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
