@@ -42,5 +42,6 @@
     "processingAvatar": "Processing Avatar",
     "avatarProcessingMessage": "Your avatar is being processed and will be available soon!",
     "avatarCreationInitiated": "Avatar Creation Started!",
-    "avatarQualityInfo": "The avatars created by users on our website are of good quality, but they are not the best we offer. For a higher-quality, well-trained custom avatar, please reach out to us."
+    "avatarQualityInfo": "The avatars created by users on our website are of good quality, but they are not the best we offer. For a higher-quality, well-trained custom avatar, please reach out to us.",
+    "avatarURLHint": "Use direct online URLs with file extensions such as .mp4, .mov, etc."
 } 

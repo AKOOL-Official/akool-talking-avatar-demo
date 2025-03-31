@@ -42,5 +42,6 @@
     "processingAvatar": "处理头像",
     "avatarProcessingMessage": "您的头像正在处理中，即将可用！",
     "avatarCreationInitiated": "头像创建已开始！",
-    "avatarQualityInfo": "我们网站上的用户创建的头像质量不错，但并不是我们提供的最佳头像。如需更高质量、训练有素的自定义头像，请联系我们。"
+    "avatarQualityInfo": "我们网站上的用户创建的头像质量不错，但并不是我们提供的最佳头像。如需更高质量、训练有素的自定义头像，请联系我们。",
+    "avatarURLHint": "请使用带有 .mp4、.mov 等文件扩展名的在线直接 URL。"
 } 

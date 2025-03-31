@@ -42,5 +42,6 @@
     "processingAvatar": "아바타 처리 중",
     "avatarProcessingMessage": "아바타가 처리 중이며 곧 이용 가능합니다!",
     "avatarCreationInitiated": "아바타 생성이 시작되었습니다!",
-    "avatarQualityInfo": "당사 웹사이트에서 사용자가 만든 아바타는 품질이 좋지만 당사가 제공하는 최고는 아닙니다. 더 높은 품질, 잘 훈련된 맞춤형 아바타를 원하시면 당사에 문의해 주십시오."
+    "avatarQualityInfo": "당사 웹사이트에서 사용자가 만든 아바타는 품질이 좋지만 당사가 제공하는 최고는 아닙니다. 더 높은 품질, 잘 훈련된 맞춤형 아바타를 원하시면 당사에 문의해 주십시오.",
+    "avatarURLHint": ".mp4, .mov 등의 파일 확장자를 가진 온라인 직접 URL을 사용하세요."
 } 

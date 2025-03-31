@@ -91,8 +91,23 @@ function App() {
       console.log('Avatar List Response:', response.data);
 
       if (Array.isArray(response.data.data.result)) {
-        const combinedAvatars = [...processingAvatars, ...response.data.data.result];
-        setAvatars(combinedAvatars);
+        // Create a map to track seen avatar_ids and ensure uniqueness
+        const avatarMap = new Map();
+        
+        // Process processing avatars first
+        processingAvatars.forEach(avatar => {
+          avatarMap.set(avatar.avatar_id, avatar);
+        });
+        
+        // Then process API results, potentially overwriting processing avatars if they're now complete
+        response.data.data.result.forEach(avatar => {
+          // Only add if not already in the map, or update if it exists
+          avatarMap.set(avatar.avatar_id, avatar);
+        });
+        
+        // Convert map back to array
+        const uniqueAvatars = Array.from(avatarMap.values());
+        setAvatars(uniqueAvatars);
       } else {
         console.error('Expected an array but got:', response.data.data.result);
         setAvatars(processingAvatars);
@@ -605,10 +620,10 @@ function App() {
             </button>
           </div>
           <div className="avatar-grid" style={{ display: 'flex', overflowX: 'auto' }}>
-            {avatars.map((avatar) => (
+            {avatars.map((avatar, index) => (
               <div 
                 className={`avatar-item ${selectedAvatar?.avatar_id === avatar.avatar_id ? 'selected' : ''} ${avatar.isProcessing ? 'processing' : ''}`} 
-                key={avatar.avatar_id || Math.random().toString()}
+                key={`${avatar.avatar_id || 'processing'}-${index}`}
                 onClick={() => !avatar.isProcessing && setSelectedAvatar(avatar)}
               >
                 {avatar.isProcessing ? (
@@ -834,6 +849,7 @@ function App() {
                     placeholder={t('enterReferenceVideoUrl')}
                     required
                   />
+                  <div className="hint">{t('avatarURLHint')}</div>
                 </div>
                 <div className="create-avatar-form-group">
                   <label htmlFor="avatar-id">{t('avatarId')}</label>
